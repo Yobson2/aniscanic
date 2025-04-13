@@ -24,11 +24,11 @@ const Header : React.FC =({}) => {
             <div className="hidden md:flex items-center space-x-8">
               <Link href={routes.manga} className="flex items-center space-x-1 hover:text-[#FFD369] transition-colors">
                 <BookOpen size={20} />
-                <span>Manga</span>
+                <span>Scan</span>
               </Link>
               <Link href={routes.movie} className="flex items-center space-x-1 hover:text-[#FFD369] transition-colors">
                 <Video size={20} />
-                <span>Vidéos</span>
+                <span>Movies</span>
               </Link>
               <Link href={routes.quiz} className="flex items-center space-x-1 hover:text-[#FFD369] transition-colors">
                 <Brain size={20} />
