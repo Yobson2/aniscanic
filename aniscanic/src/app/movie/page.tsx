@@ -1,5 +1,9 @@
+'use client';
+
 import React from 'react';
+import Image from 'next/image';
 import { Play, Clock, ThumbsUp } from 'lucide-react';
+import PageHeader from '@/components/page-header';
 
 function Videos() {
   const videos = [
@@ -34,42 +38,39 @@ function Videos() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-[#FF4655] to-[#FFD369] py-24">
-        <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-5xl font-bold text-white mb-6">Vidéothèque Anime</h1>
-          <p className="text-xl text-white/90">
-            Découvrez les meilleures analyses, critiques et moments forts de vos séries préférées
-          </p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background">
+      <PageHeader
+        title="Vidéothèque Anime"
+        subtitle="Découvrez les meilleures analyses, critiques et moments forts de vos séries préférées"
+      />
 
       {/* Video Grid */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
           {videos.map((video, index) => (
-            <div key={index} className="bg-white rounded-2xl shadow-xl overflow-hidden group cursor-pointer">
-              <div className="relative">
-                <img 
-                  src={video.thumbnail} 
+            <div key={index} className="bg-card rounded-2xl shadow-card overflow-hidden group cursor-pointer hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300">
+              <div className="relative h-[300px]">
+                <Image
+                  src={video.thumbnail}
                   alt={video.title}
-                  className="w-full h-[300px] object-cover"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="absolute inset-0 bg-brand-dark/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <Play className="w-16 h-16 text-white" />
                 </div>
-                <div className="absolute bottom-4 right-4 bg-black text-white px-2 py-1 rounded-md flex items-center space-x-1">
+                <div className="absolute bottom-4 right-4 bg-brand-dark/80 text-white px-2 py-1 rounded-lg flex items-center space-x-1">
                   <Clock size={16} />
                   <span>{video.duration}</span>
                 </div>
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-4">{video.title}</h3>
-                <div className="flex items-center justify-between text-gray-600">
+                <div className="flex items-center justify-between text-muted-foreground">
                   <span>{video.views} vues</span>
                   <div className="flex items-center space-x-1">
-                    <ThumbsUp size={16} className="text-[#FF4655]" />
+                    <ThumbsUp size={16} className="text-brand-red" />
                     <span>{video.likes}</span>
                   </div>
                 </div>

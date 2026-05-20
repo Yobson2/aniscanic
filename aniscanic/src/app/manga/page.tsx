@@ -1,6 +1,9 @@
 'use client'
 import React from 'react';
-import { Search, Filter, Link } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Search, Filter } from 'lucide-react';
+import PageHeader from '@/components/page-header';
 
 function Manga() {
   const mangas = [
@@ -49,45 +52,43 @@ function Manga() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-[#FF4655] to-[#FFD369] py-24">
-        <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-5xl font-bold text-white mb-6">Bibliothèque Manga</h1>
-          <p className="text-xl text-white/90 mb-8">Explorez notre collection de mangas et trouvez votre prochaine lecture</p>
-          
-          {/* Search and Filter */}
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <input
-                type="text"
-                placeholder="Rechercher un manga..."
-                className="w-full pl-12 pr-4 py-3 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD369]"
-              />
-            </div>
-            <button className="flex items-center justify-center space-x-2 px-6 py-3 bg-white rounded-full hover:bg-[#FFD369] transition-colors">
-              <Filter size={20} />
-              <span>Filtres</span>
-            </button>
+    <div className="min-h-screen bg-background">
+      <PageHeader
+        title="Bibliothèque Manga"
+        subtitle="Explorez notre collection de mangas et trouvez votre prochaine lecture"
+      >
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder="Rechercher un manga..."
+              className="w-full pl-12 pr-4 py-3 rounded-full bg-white dark:bg-brand-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-gold"
+            />
           </div>
+          <button className="flex items-center justify-center space-x-2 px-6 py-3 bg-white dark:bg-brand-dark dark:text-white rounded-full hover:bg-brand-gold hover:text-brand-dark transition-colors">
+            <Filter size={20} />
+            <span>Filtres</span>
+          </button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Manga Grid */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
           {mangas.map((manga, index) => (
-            <Link href={`/manga/${manga.title.toLowerCase().replace(/\s+/g, '-')}`} key={index} className="group bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+            <Link href={`/manga/${manga.title.toLowerCase().replace(/\s+/g, '-')}`} key={index} className="group bg-card rounded-2xl shadow-card overflow-hidden hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300">
               <div className="relative h-[300px]">
-                <img 
-                  src={manga.image} 
+                <Image
+                  src={manga.image}
                   alt={manga.title}
-                  className="w-full h-full object-cover transition duration-300 group-hover:scale-110"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition duration-300 group-hover:scale-110"
                 />
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
                   <div className="flex items-center space-x-1">
-                    <span className="text-[#FFD369]">★</span>
+                    <span className="text-brand-gold">★</span>
                     <span>{manga.rating}</span>
                   </div>
                 </div>
@@ -95,9 +96,9 @@ function Manga() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-xl font-bold">{manga.title}</h3>
-                  <span className="bg-[#FF4655] text-white px-3 py-1 rounded-full text-sm">{manga.genre}</span>
+                  <span className="bg-brand-red text-white px-3 py-1 rounded-full text-sm">{manga.genre}</span>
                 </div>
-                <p className="text-gray-600">{manga.chapters} chapitres</p>
+                <p className="text-muted-foreground">{manga.chapters} chapitres</p>
               </div>
             </Link>
           ))}

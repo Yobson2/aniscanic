@@ -1,6 +1,8 @@
 'use client'
 import React from 'react';
+import Image from 'next/image';
 import { Brain, Star, Clock, Trophy } from 'lucide-react';
+import PageHeader from '@/components/page-header';
 
 function Quiz() {
   const quizzes = [
@@ -35,29 +37,26 @@ function Quiz() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-[#FF4655] to-[#FFD369] py-24">
-        <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-5xl font-bold text-white mb-6">Quiz Manga</h1>
-          <p className="text-xl text-white/90">
-            Testez vos connaissances et défiez d'autres fans
-          </p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background">
+      <PageHeader
+        title="Quiz Manga"
+        subtitle="Testez vos connaissances et défiez d'autres fans"
+      />
 
       {/* Quiz Categories */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
           {quizzes.map((quiz, index) => (
-            <div key={index} className="bg-white rounded-2xl shadow-xl overflow-hidden group cursor-pointer hover:shadow-2xl transition-shadow duration-300">
+            <div key={index} className="bg-card rounded-2xl shadow-card overflow-hidden group cursor-pointer hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300">
               <div className="relative h-[200px]">
-                <img 
-                  src={quiz.image} 
+                <Image
+                  src={quiz.image}
                   alt={quiz.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4">
                   <h3 className="text-xl font-bold text-white mb-2">{quiz.title}</h3>
                   <div className="flex items-center space-x-4 text-white/90">
@@ -77,7 +76,7 @@ function Quiz() {
                 </div>
               </div>
               <div className="p-6">
-                <button className="w-full bg-[#FF4655] text-white py-3 rounded-full hover:bg-[#FFD369] hover:text-gray-900 transition-colors">
+                <button className="w-full bg-brand-red text-white py-3 rounded-full hover:bg-brand-gold hover:text-brand-dark transition-colors">
                   Commencer le Quiz
                 </button>
               </div>
@@ -88,10 +87,10 @@ function Quiz() {
 
       {/* Leaderboard Preview */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-card rounded-2xl shadow-card p-8">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold">Meilleurs Scores</h2>
-            <Trophy className="text-[#FFD369]" size={32} />
+            <Trophy className="text-brand-gold" size={32} />
           </div>
           <div className="space-y-4">
             {[
@@ -99,12 +98,12 @@ function Quiz() {
               { name: "MangaKing", score: 850, rank: 2 },
               { name: "OtakuPro", score: 720, rank: 3 }
             ].map((player, index) => (
-              <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-4 bg-muted rounded-xl">
                 <div className="flex items-center space-x-4">
                   <span className="font-bold text-lg">{player.rank}</span>
                   <span>{player.name}</span>
                 </div>
-                <span className="font-bold text-[#FF4655]">{player.score} pts</span>
+                <span className="font-bold text-brand-red">{player.score} pts</span>
               </div>
             ))}
           </div>
