@@ -1,10 +1,14 @@
-'use client'
 import React from 'react';
 import Image from 'next/image';
-import { Trophy, Medal, Star, TrendingUp } from 'lucide-react';
+import Link from 'next/link';
+import { Trophy, Medal, Star, TrendingUp, BookOpen } from 'lucide-react';
 import PageHeader from '@/components/page-header';
+import { routes } from '@/constants';
+import { getTopRatedManga } from '@/lib/api/anilist';
 
-function Ranking() {
+async function Ranking() {
+  const topManga = await getTopRatedManga(10).catch(() => null);
+
   const topPlayers = [
     {
       rank: 1,
@@ -95,6 +99,45 @@ function Ranking() {
           ))}
         </div>
       </div>
+
+      {/* Top rated manga (AniList) */}
+      {topManga && topManga.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 pt-12" aria-labelledby="top-manga-title">
+          <div className="bg-card rounded-2xl shadow-card p-6 md:p-8">
+            <div className="flex items-center justify-between mb-8">
+              <h2 id="top-manga-title" className="text-2xl font-bold">Les mangas les mieux notés</h2>
+              <BookOpen className="text-brand-gold" size={32} aria-hidden />
+            </div>
+            <ol className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {topManga.map((manga, index) => (
+                <li key={manga.id}>
+                  <Link
+                    href={`${routes.manga}?q=${encodeURIComponent(manga.title)}`}
+                    className="flex items-center gap-4 p-3 bg-muted rounded-xl hover:bg-brand-gold hover:text-brand-dark transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red"
+                  >
+                    <span className="w-8 text-center font-bold text-lg text-brand-red">{index + 1}</span>
+                    <Image src={manga.cover} alt="" width={48} height={68} className="w-12 h-[68px] rounded-lg object-cover shrink-0" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-bold truncate">{manga.title}</span>
+                      <span className="block text-sm opacity-75 truncate">{manga.genres.join(', ')}</span>
+                    </span>
+                    {manga.score != null && (
+                      <span className="shrink-0 font-bold">
+                        {manga.score}<span className="text-sm font-normal opacity-75">/100</span>
+                      </span>
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-6 text-sm text-muted-foreground">
+              Notes de la communauté{' '}
+              <a href="https://anilist.co" target="_blank" rel="noopener noreferrer" className="underline hover:text-brand-red">AniList</a>
+              . Clique sur un titre pour le chercher dans la bibliothèque.
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* Recent Achievements */}
       <div className="max-w-7xl mx-auto px-4 py-12">
