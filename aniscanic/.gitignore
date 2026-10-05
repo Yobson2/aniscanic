@@ -43,3 +43,6 @@ next-env.d.ts
 # lockfiles from other package managers (this project uses pnpm)
 package-lock.json
 yarn.lock
+
+# Windows crash dumps
+*.stackdump
