@@ -20,27 +20,23 @@ export function useTheme() {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark');
-  const [mounted, setMounted] = useState(false);
 
+  // The inline script in layout.tsx already applied the stored theme before paint;
+  // sync React state with it instead of hiding the page until hydration.
   useEffect(() => {
-    const stored = localStorage.getItem('aniscanic-theme') as Theme | null;
-    const initial = stored || 'dark';
-    setTheme(initial);
-    document.documentElement.classList.toggle('dark', initial === 'dark');
-    setMounted(true);
+    setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
   }, []);
 
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     setTheme(next);
-    localStorage.setItem('aniscanic-theme', next);
+    try {
+      localStorage.setItem('aniscanic-theme', next);
+    } catch {
+      // Private mode: the choice just won't persist.
+    }
     document.documentElement.classList.toggle('dark', next === 'dark');
   };
-
-  // Prevent flash of wrong theme
-  if (!mounted) {
-    return <div style={{ visibility: 'hidden' }}>{children}</div>;
-  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

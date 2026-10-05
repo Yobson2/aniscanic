@@ -42,8 +42,10 @@ Next.js 15 app (App Router) with React 19, TypeScript, and Tailwind CSS v4. Uses
 ### Key directories
 
 - `src/app/` - App Router pages: home (`/`), manga, movie, quiz, ranking
-- `src/components/` - Shared components (header, footer, heroBanner)
-- `src/components/hero-sections-home/` - Homepage hero section variants (HeroSectionOne, HeroSectionTwo)
+- `src/components/` - Shared components (header, footer, page-header, search-form, manga-cover-card, movie-card)
+- `src/components/home/` - Homepage pieces (`planche.tsx`: the hero panel grid of latest French releases)
+- `src/components/quiz/` - Client-side quiz game; personal records live in `src/lib/quiz-records.ts` (localStorage, no accounts)
+- `src/lib/api/` - Server-side clients for MangaDex (reading), AniList (films, rankings), Open Trivia DB (quiz)
 - `src/components/ui/` - Reusable UI primitives (button, input) built with CVA + tailwind-merge
 - `src/lib/utils.ts` - `cn()` helper for merging Tailwind classes
 - `src/constants.tsx` - Centralized route definitions (`routes` object)
@@ -61,8 +63,11 @@ Remote images from `images.unsplash.com` are allowed in `next.config.ts`.
 
 ### Conventions
 
-- Pages are client components (`'use client'`) with Header/Footer composed at the page level
-- Components accept `isDarkMode` prop for theme-aware rendering
+- Pages are server components that fetch live data and show an explanatory message when an API fails; interactivity lives in small client components. Header/Footer are composed once in `layout.tsx`
+- Theme: `.dark` class on `<html>`, set before paint by the inline script in `layout.tsx`. Use the CSS tokens (`bg-background`, `bg-card`, `text-muted-foreground`, `text-accent-text`, `bg-surface-ink`), not an `isDarkMode` prop
+- Never show invented data (players, stats, testimonials): every number on the site comes from an API or from the visitor's own device
+- Homepage series come from `getLatestReleases()`, not `searchManga()`: MangaDex's `availableTranslatedLanguage` flag is stale for some series, which then have no French chapters
+- Contrast: text on `brand-red` is `brand-dark` (white fails AA); red text uses `text-accent-text`. Headlines use the `type-display` / `type-title` classes (Unbounded); body is Hanken Grotesk
 - Navigation uses the `routes` object from `@/constants` for all internal links
 - Lucide React for icons
 - Framer Motion available for animations

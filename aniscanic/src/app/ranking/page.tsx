@@ -1,204 +1,128 @@
-import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Trophy, Medal, Star, TrendingUp, BookOpen } from 'lucide-react';
 import PageHeader from '@/components/page-header';
 import { routes } from '@/constants';
-import { getTopRatedManga } from '@/lib/api/anilist';
+import { cn } from '@/lib/utils';
+import { getTopRatedManga, type MangaRankingSort, type RankedManga } from '@/lib/api/anilist';
 
-async function Ranking() {
-  const topManga = await getTopRatedManga(10).catch(() => null);
+export const metadata = { title: 'Classement manga — Aniscanic' };
 
-  const topPlayers = [
-    {
-      rank: 1,
-      name: "Luffy_Fan",
-      score: 15780,
-      quizCompleted: 145,
-      accuracy: "98%",
-      avatar: "https://images.unsplash.com/photo-1613376023733-0a73315d9b06?auto=format&fit=crop&w=200&q=80"
-    },
-    {
-      rank: 2,
-      name: "MangaKing",
-      score: 14920,
-      quizCompleted: 132,
-      accuracy: "95%",
-      avatar: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=200&q=80"
-    },
-    {
-      rank: 3,
-      name: "OtakuPro",
-      score: 13850,
-      quizCompleted: 128,
-      accuracy: "93%",
-      avatar: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=200&q=80"
-    }
-  ];
+const RANKING_SIZE = 20;
 
-  const recentAchievements = [
-    {
-      player: "Luffy_Fan",
-      achievement: "Expert One Piece",
-      points: 500,
-      date: "Il y a 2h"
-    },
-    {
-      player: "MangaKing",
-      achievement: "Maître des Shonen",
-      points: 1000,
-      date: "Il y a 5h"
-    },
-    {
-      player: "OtakuPro",
-      achievement: "Quiz Perfect",
-      points: 300,
-      date: "Il y a 8h"
-    }
-  ];
+const tabs: { sort: MangaRankingSort; param: string; label: string; caption: string }[] = [
+  { sort: 'score', param: 'notes', label: 'Mieux notés', caption: 'Note moyenne des lecteurs AniList, parmi les mangas suivis par plus de 20 000 personnes.' },
+  { sort: 'popularity', param: 'popularite', label: 'Plus populaires', caption: 'Nombre de lecteurs AniList qui ont ajouté le manga à leur liste.' },
+];
+
+/** Search the French library for this title (AniList and MangaDex ids don't match). */
+const libraryHref = (m: RankedManga) => `${routes.manga}?q=${encodeURIComponent(m.title)}`;
+
+function Score({ manga }: { manga: RankedManga }) {
+  if (manga.score == null) return null;
+  return (
+    <span className="font-semibold">
+      {manga.score}
+      <span className="text-sm font-normal text-muted-foreground">/100</span>
+    </span>
+  );
+}
+
+export default async function RankingPage({ searchParams }: { searchParams: Promise<{ tri?: string }> }) {
+  const { tri } = await searchParams;
+  const active = tabs.find((t) => t.param === tri) ?? tabs[0];
+  const ranking = await getTopRatedManga(RANKING_SIZE, active.sort).catch(() => null);
+  const podium = ranking?.slice(0, 3) ?? [];
+  const rest = ranking?.slice(3) ?? [];
 
   return (
     <div className="min-h-screen bg-background">
       <PageHeader
-        title="Classement Global"
-        subtitle="Les meilleurs connaisseurs de manga de la communauté"
-      />
-
-      {/* Top 3 Podium */}
-      <div className="max-w-7xl mx-auto px-4 -mt-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {topPlayers.map((player, index) => (
-            <div key={index} className="bg-card rounded-2xl shadow-card p-6 hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300">
-              <div className="flex flex-col items-center">
-                <div className="relative mb-4">
-                  <Image
-                    src={player.avatar}
-                    alt={player.name}
-                    width={96}
-                    height={96}
-                    className="w-24 h-24 rounded-full object-cover border-4 border-brand-gold"
-                  />
-                  <div className="absolute -top-2 -right-2 bg-brand-red text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">
-                    #{player.rank}
-                  </div>
-                </div>
-                <h3 className="text-xl font-bold mb-2">{player.name}</h3>
-                <div className="text-3xl font-bold text-brand-red mb-4">{player.score} pts</div>
-                <div className="w-full space-y-2">
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Quiz complétés</span>
-                    <span>{player.quizCompleted}</span>
-                  </div>
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Précision</span>
-                    <span>{player.accuracy}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+        title="Classement manga"
+        subtitle="Les mangas les mieux notés et les plus lus, d’après la communauté AniList. Clique sur un titre pour le chercher en français."
+      >
+        <nav aria-label="Type de classement" className="inline-flex flex-wrap gap-1 rounded-xl bg-white/10 p-1">
+          {tabs.map((tab) => (
+            <Link
+              key={tab.param}
+              href={tab === tabs[0] ? routes.ranking : `${routes.ranking}?tri=${tab.param}`}
+              aria-current={tab === active ? 'page' : undefined}
+              className={cn(
+                'inline-flex h-11 items-center rounded-lg px-5 font-semibold transition-colors',
+                tab === active ? 'bg-brand-gold text-brand-dark' : 'text-brand-light/80 hover:text-brand-light hover:bg-white/10'
+              )}
+            >
+              {tab.label}
+            </Link>
           ))}
-        </div>
-      </div>
+        </nav>
+      </PageHeader>
 
-      {/* Top rated manga (AniList) */}
-      {topManga && topManga.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 pt-12" aria-labelledby="top-manga-title">
-          <div className="bg-card rounded-2xl shadow-card p-6 md:p-8">
-            <div className="flex items-center justify-between mb-8">
-              <h2 id="top-manga-title" className="text-2xl font-bold">Les mangas les mieux notés</h2>
-              <BookOpen className="text-brand-gold" size={32} aria-hidden />
-            </div>
-            <ol className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {topManga.map((manga, index) => (
-                <li key={manga.id}>
-                  <Link
-                    href={`${routes.manga}?q=${encodeURIComponent(manga.title)}`}
-                    className="flex items-center gap-4 p-3 bg-muted rounded-xl hover:bg-brand-gold hover:text-brand-dark transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red"
-                  >
-                    <span className="w-8 text-center font-bold text-lg text-brand-red">{index + 1}</span>
-                    <Image src={manga.cover} alt="" width={48} height={68} className="w-12 h-[68px] rounded-lg object-cover shrink-0" />
-                    <span className="min-w-0 flex-1">
-                      <span className="block font-bold truncate">{manga.title}</span>
-                      <span className="block text-sm opacity-75 truncate">{manga.genres.join(', ')}</span>
-                    </span>
-                    {manga.score != null && (
-                      <span className="shrink-0 font-bold">
-                        {manga.score}<span className="text-sm font-normal opacity-75">/100</span>
+      <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+        {ranking === null ? (
+          <div className="rounded-xl bg-card p-8 shadow-card">
+            <h2 className="text-xl font-semibold">Le classement AniList ne répond pas</h2>
+            <p className="mt-2 text-muted-foreground">Recharge la page dans quelques secondes.</p>
+          </div>
+        ) : (
+          <>
+            <p className="mb-8 max-w-2xl text-muted-foreground">{active.caption}</p>
+
+            {/* Top 3: covers carry the podium */}
+            <ol className="grid grid-cols-1 gap-gutter sm:grid-cols-3">
+              {podium.map((m, i) => (
+                <li key={m.id}>
+                  <Link href={libraryHref(m)} className="group flex h-full flex-col gap-4 rounded-xl bg-card p-4 shadow-card hover:bg-muted md:p-5">
+                    <span className="relative block aspect-[4/3] overflow-hidden rounded-lg bg-muted sm:aspect-square">
+                      <Image
+                        src={m.cover}
+                        alt=""
+                        fill
+                        priority={i === 0}
+                        sizes="(max-width: 640px) 90vw, 30vw"
+                        className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+                      />
+                      <span className="type-display absolute left-3 top-3 flex size-12 items-center justify-center rounded-xl bg-brand-gold text-2xl text-brand-dark">
+                        {i + 1}
                       </span>
-                    )}
+                    </span>
+                    <span className="flex items-start justify-between gap-3">
+                      <span className="min-w-0">
+                        <span className="type-title block text-lg">{m.title}</span>
+                        <span className="text-sm text-muted-foreground">{m.genres.join(', ')}</span>
+                      </span>
+                      <Score manga={m} />
+                    </span>
                   </Link>
                 </li>
               ))}
             </ol>
-            <p className="mt-6 text-sm text-muted-foreground">
-              Notes de la communauté{' '}
-              <a href="https://anilist.co" target="_blank" rel="noopener noreferrer" className="underline hover:text-brand-red">AniList</a>
-              . Clique sur un titre pour le chercher dans la bibliothèque.
+
+            <ol start={4} className="mt-gutter grid grid-cols-1 gap-2 md:grid-cols-2">
+              {rest.map((m, i) => (
+                <li key={m.id}>
+                  <Link href={libraryHref(m)} className="flex items-center gap-4 rounded-xl bg-card p-3 shadow-card hover:bg-muted">
+                    <span className="type-title w-8 shrink-0 text-center text-lg text-accent-text">{i + 4}</span>
+                    <Image src={m.cover} alt="" width={48} height={68} className="h-[68px] w-12 shrink-0 rounded-lg object-cover" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-semibold">{m.title}</span>
+                      <span className="block truncate text-sm text-muted-foreground">
+                        {[m.genres.join(', '), m.chapters ? `${m.chapters} chapitres` : null].filter(Boolean).join(', ')}
+                      </span>
+                    </span>
+                    <Score manga={m} />
+                  </Link>
+                </li>
+              ))}
+            </ol>
+
+            <p className="mt-12 text-center text-sm text-muted-foreground">
+              Données{' '}
+              <a href="https://anilist.co" target="_blank" rel="noopener noreferrer" className="underline hover:text-accent-text">AniList</a>
+              , mises à jour toutes les heures.
             </p>
-          </div>
-        </section>
-      )}
-
-      {/* Recent Achievements */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="bg-card rounded-2xl shadow-card p-8">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold">Derniers Exploits</h2>
-            <Medal className="text-brand-gold" size={32} />
-          </div>
-          <div className="space-y-4">
-            {recentAchievements.map((achievement, index) => (
-              <div key={index} className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                <div>
-                  <div className="font-bold">{achievement.player}</div>
-                  <div className="text-muted-foreground">{achievement.achievement}</div>
-                </div>
-                <div className="text-right">
-                  <div className="font-bold text-brand-red">+{achievement.points} pts</div>
-                  <div className="text-muted-foreground">{achievement.date}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Statistics */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              icon: <Trophy className="text-brand-gold" size={32} />,
-              title: "Quiz Complétés",
-              value: "1,234",
-              trend: "+12% cette semaine"
-            },
-            {
-              icon: <Star className="text-brand-gold" size={32} />,
-              title: "Moyenne de Score",
-              value: "856 pts",
-              trend: "+5% ce mois"
-            },
-            {
-              icon: <TrendingUp className="text-brand-gold" size={32} />,
-              title: "Participants Actifs",
-              value: "458",
-              trend: "+25% ce mois"
-            }
-          ].map((stat, index) => (
-            <div key={index} className="bg-card rounded-2xl shadow-card p-6">
-              <div className="flex items-center justify-between mb-4">
-                {stat.icon}
-                <span className="text-green-500 text-sm">{stat.trend}</span>
-              </div>
-              <h3 className="text-muted-foreground mb-2">{stat.title}</h3>
-              <div className="text-2xl font-bold">{stat.value}</div>
-            </div>
-          ))}
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
 }
-
-export default Ranking;

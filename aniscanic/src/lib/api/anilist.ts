@@ -83,17 +83,19 @@ export async function getPopularMovies(perPage = 12): Promise<AnimeMovie[]> {
   }));
 }
 
-export async function getTopRatedManga(perPage = 10): Promise<RankedManga[]> {
+export type MangaRankingSort = 'score' | 'popularity';
+
+export async function getTopRatedManga(perPage = 10, sort: MangaRankingSort = 'score'): Promise<RankedManga[]> {
   const data = await anilist<{ Page: { media: RawMedia[] } }>(
-    `query ($perPage: Int) {
+    `query ($perPage: Int, $sort: [MediaSort]) {
       Page(perPage: $perPage) {
-        media(type: MANGA, sort: SCORE_DESC, isAdult: false, popularity_greater: 20000) {
+        media(type: MANGA, sort: $sort, isAdult: false, popularity_greater: 20000) {
           id siteUrl title { english romaji } averageScore genres chapters
           coverImage { extraLarge color }
         }
       }
     }`,
-    { perPage }
+    { perPage, sort: sort === 'score' ? 'SCORE_DESC' : 'POPULARITY_DESC' }
   );
   return data.Page.media.map((m) => ({
     id: m.id,

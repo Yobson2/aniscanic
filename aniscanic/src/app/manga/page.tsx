@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import Image from 'next/image';
-import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import MangaCoverCard from '@/components/manga-cover-card';
+import SearchForm from '@/components/search-form';
 import PageHeader from '@/components/page-header';
 import { routes } from '@/constants';
-import { getRatings, PAGE_SIZE, searchManga, STATUS_LABELS, type Manga } from '@/lib/api/mangadex';
+import { getRatings, PAGE_SIZE, searchManga, type Manga } from '@/lib/api/mangadex';
 
 export const metadata = { title: 'Bibliothèque Manga — Aniscanic' };
 
@@ -16,6 +17,10 @@ async function loadCatalog(query: string, page: number) {
     return { manga: [] as Manga[], total: 0, ratings: {} as Record<string, number | null>, error: true as const };
   }
 }
+
+const number = new Intl.NumberFormat('fr-FR');
+const pagerLink =
+  'inline-flex h-12 items-center gap-1 rounded-xl bg-card px-5 font-semibold shadow-card transition-colors hover:bg-brand-gold hover:text-brand-dark';
 
 function pageHref(query: string, page: number) {
   const params = new URLSearchParams();
@@ -39,103 +44,54 @@ export default async function MangaPage({
   return (
     <div className="min-h-screen bg-background">
       <PageHeader
-        title="Bibliothèque Manga"
-        subtitle="Des mangas disponibles en français, à lire directement sur Aniscanic"
+        title="Bibliothèque manga"
+        subtitle="Les séries traduites en français par les groupes de fans, à lire directement ici."
       >
-        <form action={routes.manga} role="search" className="flex flex-col md:flex-row gap-4">
-          <label className="flex-1 relative">
-            <span className="sr-only">Rechercher un manga</span>
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} aria-hidden />
-            <input
-              type="search"
-              name="q"
-              defaultValue={query}
-              placeholder="Rechercher un manga..."
-              className="w-full pl-12 pr-4 py-3 rounded-full bg-white dark:bg-brand-dark dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-gold"
-            />
-          </label>
-          <button
-            type="submit"
-            className="px-6 py-3 bg-brand-dark text-white rounded-full hover:bg-brand-gold hover:text-brand-dark transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-          >
-            Rechercher
-          </button>
-        </form>
+        <SearchForm defaultValue={query} className="max-w-2xl" />
       </PageHeader>
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
         {error ? (
-          <p className="rounded-2xl bg-card shadow-card p-8 text-center text-muted-foreground">
-            Le catalogue MangaDex ne répond pas pour le moment. Recharge la page dans quelques instants.
-          </p>
+          <div className="rounded-xl bg-card p-8 shadow-card">
+            <h2 className="text-xl font-semibold">Le catalogue MangaDex ne répond pas</h2>
+            <p className="mt-2 text-muted-foreground">Recharge la page dans quelques secondes.</p>
+          </div>
         ) : manga.length === 0 ? (
-          <p className="rounded-2xl bg-card shadow-card p-8 text-center text-muted-foreground">
-            Aucun manga avec des chapitres en français ne correspond à « {query} ». Essaie un autre titre.
-          </p>
+          <div className="rounded-xl bg-card p-8 shadow-card">
+            <h2 className="text-xl font-semibold">Aucune série trouvée pour « {query} »</h2>
+            <p className="mt-2 text-muted-foreground">
+              Seules les séries avec des chapitres en français apparaissent. Essaie le titre original en romaji, ou{" "}
+              <Link href={routes.manga} className="font-semibold text-accent-text underline underline-offset-4">parcours les plus suivies</Link>.
+            </p>
+          </div>
         ) : (
           <>
-            {query && (
-              <p className="mb-6 text-muted-foreground">
-                {total} résultat{total > 1 ? 's' : ''} pour « {query} »
-              </p>
-            )}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 md:gap-6">
-              {manga.map((m) => {
-                const rating = ratings[m.id];
-                return (
-                  <Link
-                    key={m.id}
-                    href={routes.mangaDetail(m.id)}
-                    className="group bg-card rounded-2xl shadow-card overflow-hidden hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red"
-                  >
-                    <div className="relative aspect-[2/3] bg-muted">
-                      {m.coverUrl && (
-                        <Image
-                          src={m.coverUrl}
-                          alt=""
-                          fill
-                          unoptimized
-                          sizes="(max-width: 768px) 50vw, (max-width: 1280px) 25vw, 16vw"
-                          className="object-cover transition duration-300 group-hover:scale-105"
-                        />
-                      )}
-                      {rating != null && (
-                        <span className="absolute top-3 right-3 bg-white/90 text-brand-dark backdrop-blur-sm px-2.5 py-1 rounded-full text-sm font-semibold">
-                          <span className="text-brand-red" aria-hidden>★</span> {rating.toFixed(1)}
-                          <span className="sr-only"> sur 10</span>
-                        </span>
-                      )}
-                    </div>
-                    <div className="p-4">
-                      <h2 className="font-bold leading-snug line-clamp-2">{m.title}</h2>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {[m.genres[0], STATUS_LABELS[m.status]].filter(Boolean).join(', ')}
-                      </p>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+            <h2 className="mb-8 text-muted-foreground" aria-live="polite">
+              {query
+                ? `${number.format(total)} résultat${total > 1 ? "s" : ""} pour « ${query} »`
+                : "Les plus suivies d’abord"}
+            </h2>
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:gap-x-6 lg:grid-cols-4 xl:grid-cols-6">
+              {manga.map((m) => (
+                <li key={m.id}>
+                  <MangaCoverCard manga={m} rating={ratings[m.id]} />
+                </li>
+              ))}
+            </ul>
 
             {lastPage > 1 && (
-              <nav aria-label="Pagination" className="mt-12 flex items-center justify-center gap-4">
+              <nav aria-label="Pagination" className="mt-14 flex flex-wrap items-center justify-center gap-3">
                 {page > 1 && (
-                  <Link
-                    href={pageHref(query, page - 1)}
-                    className="inline-flex items-center gap-1 px-5 py-3 rounded-full bg-card shadow-card hover:bg-brand-gold hover:text-brand-dark transition-colors"
-                  >
-                    <ChevronLeft size={18} aria-hidden /> Page précédente
+                  <Link href={pageHref(query, page - 1)} className={pagerLink}>
+                    <ChevronLeft size={18} aria-hidden /> Précédente
                   </Link>
                 )}
-                <span className="text-muted-foreground">
-                  Page {page} sur {lastPage}
+                <span className="px-2 text-muted-foreground" aria-current="page">
+                  Page {page} sur {number.format(lastPage)}
                 </span>
                 {page < lastPage && (
-                  <Link
-                    href={pageHref(query, page + 1)}
-                    className="inline-flex items-center gap-1 px-5 py-3 rounded-full bg-card shadow-card hover:bg-brand-gold hover:text-brand-dark transition-colors"
-                  >
-                    Page suivante <ChevronRight size={18} aria-hidden />
+                  <Link href={pageHref(query, page + 1)} className={pagerLink}>
+                    Suivante <ChevronRight size={18} aria-hidden />
                   </Link>
                 )}
               </nav>
@@ -143,11 +99,11 @@ export default async function MangaPage({
           </>
         )}
 
-        <p className="mt-12 text-center text-sm text-muted-foreground">
-          Catalogue et chapitres fournis par{' '}
-          <a href="https://mangadex.org" target="_blank" rel="noopener noreferrer" className="underline hover:text-brand-red">
+        <p className="mt-14 text-center text-sm text-muted-foreground">
+          Catalogue et chapitres fournis par{" "}
+          <a href="https://mangadex.org" target="_blank" rel="noopener noreferrer" className="underline hover:text-accent-text">
             MangaDex
-          </a>{' '}
+          </a>{" "}
           et traduits par des groupes de fans, crédités sur chaque chapitre.
         </p>
       </div>

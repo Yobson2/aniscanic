@@ -36,17 +36,17 @@ export async function generateMetadata({ params }: { params: Params }) {
 }
 
 const navButton =
-  'inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold';
+  'inline-flex min-h-11 items-center gap-1 rounded-xl px-4 text-sm font-semibold transition-colors';
 
 export default async function ChapterReaderPage({ params }: { params: Params }) {
   const { id, chapterId } = await params;
   const { chapter, manga, pages, previous, next } = await loadReader(id, chapterId);
 
   return (
-    <div className="min-h-screen bg-brand-dark text-brand-light pt-20">
-      <div className="sticky top-20 z-40 bg-brand-dark/95 backdrop-blur-md">
+    <div className="on-ink min-h-screen bg-surface-ink text-brand-light pt-16 md:pt-20">
+      <div className="sticky top-16 md:top-20 z-40 bg-surface-ink/95 backdrop-blur-md">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-          <Link href={routes.mangaDetail(manga.id)} className="min-w-0 hover:text-brand-gold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold rounded-lg">
+          <Link href={routes.mangaDetail(manga.id)} className="min-w-0 hover:text-brand-gold rounded-lg">
             <span className="block truncate font-semibold">{manga.title}</span>
             <span className="block text-sm text-white/60">
               {chapterLabel(chapter)}
@@ -61,7 +61,7 @@ export default async function ChapterReaderPage({ params }: { params: Params }) 
               </Link>
             ) : null}
             {next ? (
-              <Link href={routes.chapter(manga.id, next.id)} className={`${navButton} bg-brand-red text-white hover:bg-brand-gold hover:text-brand-dark`}>
+              <Link href={routes.chapter(manga.id, next.id)} className={`${navButton} bg-brand-red text-brand-dark hover:bg-brand-gold`}>
                 <span className="hidden sm:inline">Suivant</span>
                 <span className="sr-only sm:hidden">Chapitre suivant</span> <ChevronRight size={16} aria-hidden />
               </Link>
@@ -72,7 +72,7 @@ export default async function ChapterReaderPage({ params }: { params: Params }) 
 
       <div className="max-w-3xl mx-auto px-0 sm:px-4 py-6">
         {pages === null ? (
-          <p className="mx-4 rounded-2xl bg-white/5 p-6 text-white/80">
+          <p className="mx-4 rounded-xl bg-white/5 p-6 text-white/80">
             Les pages de ce chapitre n’ont pas pu être chargées. Recharge la page dans quelques instants.
           </p>
         ) : (
@@ -96,7 +96,7 @@ export default async function ChapterReaderPage({ params }: { params: Params }) 
           {next ? (
             <Link
               href={routes.chapter(manga.id, next.id)}
-              className="flex items-center justify-between gap-4 rounded-3xl bg-brand-gold text-brand-dark px-6 py-5 font-semibold hover:bg-brand-red hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="flex items-center justify-between gap-4 rounded-xl bg-brand-red text-brand-dark px-6 py-5 font-semibold hover:bg-brand-gold transition-colors"
             >
               <span>
                 <span className="block text-sm font-medium opacity-80">À suivre</span>
@@ -107,7 +107,7 @@ export default async function ChapterReaderPage({ params }: { params: Params }) 
           ) : (
             <Link
               href={routes.mangaDetail(manga.id)}
-              className="flex items-center gap-3 rounded-3xl bg-white/10 px-6 py-5 font-semibold hover:bg-white/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold"
+              className="flex items-center gap-3 rounded-xl bg-white/10 px-6 py-5 font-semibold hover:bg-white/20 transition-colors"
             >
               <BookOpen size={22} aria-hidden />
               Tu es à jour : c’est le dernier chapitre en français. Retour à la fiche

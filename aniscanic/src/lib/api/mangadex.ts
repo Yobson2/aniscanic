@@ -152,7 +152,7 @@ export const STATUS_LABELS: Record<string, string> = {
 export const PAGE_SIZE = 24;
 
 /** Manga that have chapters translated in French, most followed first (or by relevance when searching). */
-export async function searchManga(title: string, page = 1) {
+export async function searchManga(title: string, page = 1, coverSize: '256' | '512' = '256') {
   const res = await md<{ data: RawManga[]; total: number }>(
     '/manga',
     {
@@ -166,7 +166,48 @@ export async function searchManga(title: string, page = 1) {
     },
     3600
   );
-  return { manga: res.data.map((m) => toManga(m)), total: res.total };
+  return { manga: res.data.map((m) => toManga(m, coverSize)), total: res.total };
+}
+
+export interface Release {
+  manga: Manga;
+  /** Newest French chapter of that series */
+  chapter: Chapter;
+}
+
+/**
+ * Series that just got a French chapter, newest first, one entry per series.
+ * Unlike `availableTranslatedLanguage` (which goes stale when chapters are removed),
+ * every series here is readable right now.
+ */
+export async function getLatestReleases(limit = 17): Promise<Release[]> {
+  const feed = await md<{ data: RawChapter[] }>(
+    '/chapter',
+    {
+      'translatedLanguage[]': READING_LANGUAGE,
+      'contentRating[]': CONTENT_RATINGS,
+      'order[readableAt]': 'desc',
+      includeExternalUrl: '0',
+      limit: '100',
+    },
+    900
+  );
+  const latest = new Map<string, Chapter>();
+  for (const chapter of feed.data.map(toChapter)) {
+    if (chapter.mangaId && chapter.pages > 0 && !latest.has(chapter.mangaId)) latest.set(chapter.mangaId, chapter);
+  }
+  const ids = [...latest.keys()].slice(0, limit);
+  if (ids.length === 0) return [];
+  const res = await md<{ data: RawManga[] }>(
+    '/manga',
+    { 'ids[]': ids, limit: String(ids.length), 'contentRating[]': CONTENT_RATINGS, 'includes[]': 'cover_art' },
+    900
+  );
+  const byId = new Map(res.data.map((m) => [m.id, toManga(m, '512')]));
+  return ids.flatMap((id) => {
+    const manga = byId.get(id);
+    return manga ? [{ manga, chapter: latest.get(id)! }] : [];
+  });
 }
 
 /** Bayesian rating out of 10, keyed by manga id. */

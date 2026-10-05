@@ -51,24 +51,24 @@ export default async function MangaDetailPage({ params }: { params: Params }) {
 
   return (
     <div className="min-h-screen bg-background">
-      <section className="bg-brand-dark text-brand-light pt-28 pb-12 md:pt-32 md:pb-16">
-        <div className="max-w-6xl mx-auto px-4">
+      <section className="on-ink bg-surface-ink text-brand-light pt-24 pb-12 md:pt-32 md:pb-16">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
           <Link
             href={routes.manga}
-            className="inline-flex items-center gap-1 text-sm text-white/70 hover:text-brand-gold mb-8"
+            className="inline-flex min-h-11 items-center gap-1 rounded-lg text-sm text-white/70 hover:text-brand-gold mb-6"
           >
             <ChevronLeft size={16} aria-hidden /> Bibliothèque
           </Link>
 
           <div className="grid gap-8 md:grid-cols-[240px_minmax(0,1fr)] md:gap-12">
-            <div className="relative aspect-[2/3] w-48 md:w-full rounded-3xl overflow-hidden bg-white/5 shadow-card">
+            <div className="relative aspect-[2/3] w-48 md:w-full rounded-xl overflow-hidden bg-white/5 shadow-panel">
               {manga.coverUrl && (
                 <Image src={manga.coverUrl} alt={`Couverture de ${manga.title}`} fill unoptimized priority sizes="240px" className="object-cover" />
               )}
             </div>
 
             <div className="flex flex-col gap-5 min-w-0">
-              <h1 className="font-display font-bold text-3xl md:text-5xl leading-tight tracking-[-0.02em]">
+              <h1 className="type-display text-[clamp(2rem,3vw+1rem,3.5rem)]">
                 {manga.title}
               </h1>
               <p className="text-white/70">
@@ -82,14 +82,14 @@ export default async function MangaDetailPage({ params }: { params: Params }) {
                 </ul>
               )}
               {synopsis && (
-                <p className="max-w-prose text-white/85 leading-relaxed whitespace-pre-line line-clamp-[10]">{synopsis}</p>
+                <p className="max-w-prose text-white/80 leading-relaxed whitespace-pre-line line-clamp-[10]">{synopsis}</p>
               )}
 
               {first && (
                 <div className="mt-2 flex flex-col sm:flex-row gap-3">
                   <Link
                     href={routes.chapter(manga.id, first.id)}
-                    className="inline-flex items-center justify-center gap-3 rounded-2xl bg-brand-gold text-brand-dark px-6 py-4 font-semibold hover:bg-brand-red hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="inline-flex items-center justify-center gap-3 rounded-xl bg-brand-red text-brand-dark px-6 py-4 font-semibold hover:bg-brand-gold transition-colors"
                   >
                     <BookOpen size={20} aria-hidden />
                     {/* The French feed often starts mid-series: say where reading actually begins */}
@@ -100,7 +100,7 @@ export default async function MangaDetailPage({ params }: { params: Params }) {
                   {latest && latest.id !== first.id && (
                     <Link
                       href={routes.chapter(manga.id, latest.id)}
-                      className="inline-flex items-center justify-center rounded-2xl bg-white/10 px-6 py-4 font-semibold hover:bg-white/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                      className="inline-flex items-center justify-center rounded-xl bg-white/10 px-6 py-4 font-semibold hover:bg-white/20 transition-colors"
                     >
                       Dernier chapitre ({latest.number ?? '—'})
                     </Link>
@@ -114,16 +114,16 @@ export default async function MangaDetailPage({ params }: { params: Params }) {
 
       <section className="max-w-4xl mx-auto px-4 py-12" aria-labelledby="chapters-title">
         <div className="flex items-baseline justify-between gap-4 mb-6">
-          <h2 id="chapters-title" className="text-2xl font-bold">Chapitres en français</h2>
+          <h2 id="chapters-title" className="type-title text-2xl">Chapitres en français</h2>
           {listed && <span className="text-muted-foreground">{listed.length}</span>}
         </div>
 
         {listed === null ? (
-          <p className="rounded-2xl bg-card shadow-card p-6 text-muted-foreground">
+          <p className="rounded-xl bg-card shadow-card p-6 text-muted-foreground">
             La liste des chapitres n’a pas pu être chargée. Recharge la page dans quelques instants.
           </p>
         ) : listed.length === 0 ? (
-          <p className="rounded-2xl bg-card shadow-card p-6 text-muted-foreground">
+          <p className="rounded-xl bg-card shadow-card p-6 text-muted-foreground">
             Aucun chapitre en français pour ce manga pour l’instant.
           </p>
         ) : (
@@ -140,7 +140,7 @@ export default async function MangaDetailPage({ params }: { params: Params }) {
                   </span>
                   <span className="shrink-0 text-right text-sm text-muted-foreground">
                     {c.externalUrl ? (
-                      <span className="inline-flex items-center gap-1 text-brand-red font-medium">
+                      <span className="inline-flex items-center gap-1 text-accent-text font-medium">
                         Site officiel <ExternalLink size={14} aria-hidden />
                       </span>
                     ) : (
@@ -150,7 +150,7 @@ export default async function MangaDetailPage({ params }: { params: Params }) {
                 </>
               );
               const rowClass =
-                'flex items-center justify-between gap-4 rounded-xl bg-card shadow-card px-5 py-4 hover:bg-muted transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-red';
+                'flex items-center justify-between gap-4 rounded-xl bg-card shadow-card px-5 py-4 hover:bg-muted transition-colors';
               return (
                 <li key={c.id}>
                   {c.externalUrl ? (
@@ -170,7 +170,7 @@ export default async function MangaDetailPage({ params }: { params: Params }) {
 
         <p className="mt-10 text-sm text-muted-foreground">
           Chapitres hébergés par{' '}
-          <a href={`https://mangadex.org/title/${manga.id}`} target="_blank" rel="noopener noreferrer" className="underline hover:text-brand-red">
+          <a href={`https://mangadex.org/title/${manga.id}`} target="_blank" rel="noopener noreferrer" className="underline hover:text-accent-text">
             MangaDex
           </a>
           . Merci aux groupes de traduction cités pour leur travail.

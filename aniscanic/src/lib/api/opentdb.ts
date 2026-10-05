@@ -24,6 +24,21 @@ function shuffle<T>(items: T[]) {
   return copy;
 }
 
+/** How many anime & manga questions the pool holds, per difficulty. Separate endpoint, not rate limited. */
+export async function getQuestionCounts(): Promise<Record<Difficulty | 'total', number>> {
+  const res = await fetch('https://opentdb.com/api_count.php?category=31', { next: { revalidate: 86400 } });
+  if (!res.ok) throw new Error(`OpenTDB ${res.status}`);
+  const { category_question_count: c } = (await res.json()) as {
+    category_question_count: Record<string, number>;
+  };
+  return {
+    total: c.total_question_count,
+    easy: c.total_easy_question_count,
+    medium: c.total_medium_question_count,
+    hard: c.total_hard_question_count,
+  };
+}
+
 export async function getAnimeQuiz(difficulty: Difficulty, amount = 10): Promise<QuizQuestion[]> {
   const res = await fetch(
     `https://opentdb.com/api.php?amount=${amount}&category=31&type=multiple&difficulty=${difficulty}&encode=url3986`
