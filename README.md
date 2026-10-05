@@ -1,3 +1,5 @@
+<!-- Mirror of aniscanic/README.md with paths relative to the repo root. Edit both together. -->
+
 <div align="center">
 
 # aniscanic
@@ -7,7 +9,7 @@
 Aniscanic is a French-language web app built on live public APIs: fan translations from MangaDex,
 films and rankings from AniList, and quiz questions from Open Trivia DB.
 
-![Aniscanic homepage](docs/screenshots/home.png)
+![Aniscanic homepage](aniscanic/docs/screenshots/home.png)
 
 </div>
 
@@ -29,21 +31,21 @@ Every number on the site comes from an API or from the visitor's own device. Not
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/screenshots/manga.png" alt="Manga library"><br><sub><b>Library</b> — <code>/manga</code></sub></td>
-    <td width="50%"><img src="docs/screenshots/manga-detail.png" alt="Manga detail page"><br><sub><b>Series page</b> — <code>/manga/[id]</code></sub></td>
+    <td width="50%"><img src="aniscanic/docs/screenshots/manga.png" alt="Manga library"><br><sub><b>Library</b> — <code>/manga</code></sub></td>
+    <td width="50%"><img src="aniscanic/docs/screenshots/manga-detail.png" alt="Manga detail page"><br><sub><b>Series page</b> — <code>/manga/[id]</code></sub></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/reader.png" alt="Chapter reader"><br><sub><b>Reader</b> — <code>/manga/[id]/chapter/[chapterId]</code></sub></td>
-    <td><img src="docs/screenshots/movies.png" alt="Anime films"><br><sub><b>Films</b> — <code>/movie</code></sub></td>
+    <td><img src="aniscanic/docs/screenshots/reader.png" alt="Chapter reader"><br><sub><b>Reader</b> — <code>/manga/[id]/chapter/[chapterId]</code></sub></td>
+    <td><img src="aniscanic/docs/screenshots/movies.png" alt="Anime films"><br><sub><b>Films</b> — <code>/movie</code></sub></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/quiz.png" alt="Quiz level selection"><br><sub><b>Quiz</b> — <code>/quiz</code></sub></td>
-    <td><img src="docs/screenshots/ranking.png" alt="Manga ranking"><br><sub><b>Rankings</b> — <code>/ranking</code></sub></td>
+    <td><img src="aniscanic/docs/screenshots/quiz.png" alt="Quiz level selection"><br><sub><b>Quiz</b> — <code>/quiz</code></sub></td>
+    <td><img src="aniscanic/docs/screenshots/ranking.png" alt="Manga ranking"><br><sub><b>Rankings</b> — <code>/ranking</code></sub></td>
   </tr>
 </table>
 
 <p align="center">
-  <img src="docs/screenshots/home-mobile.png" alt="Homepage on mobile" width="300"><br>
+  <img src="aniscanic/docs/screenshots/home-mobile.png" alt="Homepage on mobile" width="300"><br>
   <sub><b>Mobile</b> — homepage at 390px</sub>
 </p>
 
@@ -83,9 +85,9 @@ Then open <http://localhost:3000>.
 
 | Source | Used for | Client | Cache |
 |---|---|---|---|
-| [MangaDex API](https://api.mangadex.org/docs/) | Latest releases, library, search, series details, chapters, reader pages, ratings | `src/lib/api/mangadex.ts` | 10 min |
-| [AniList GraphQL](https://docs.anilist.co) | Popular anime films and trailers, manga rankings | `src/lib/api/anilist.ts` | 1 h |
-| [Open Trivia DB](https://opentdb.com) | Quiz questions (category "Anime & Manga") | `src/lib/api/opentdb.ts` | 1 day for question counts |
+| [MangaDex API](https://api.mangadex.org/docs/) | Latest releases, library, search, series details, chapters, reader pages, ratings | `aniscanic/src/lib/api/mangadex.ts` | 10 min |
+| [AniList GraphQL](https://docs.anilist.co) | Popular anime films and trailers, manga rankings | `aniscanic/src/lib/api/anilist.ts` | 1 h |
+| [Open Trivia DB](https://opentdb.com) | Quiz questions (category "Anime & Manga") | `aniscanic/src/lib/api/opentdb.ts` | 1 day for question counts |
 
 All API calls happen on the server. Pages are React Server Components that fetch data directly and
 show an explanatory message instead of crashing when an API is unavailable.
@@ -94,7 +96,7 @@ show an explanatory message instead of crashing when an API is unavailable.
 
 MangaDex serves a different image to hotlinked requests, and it does not allow CORS from third-party
 sites. Covers and chapter pages therefore go through a small proxy route,
-[`src/app/api/mangadex/image/route.ts`](src/app/api/mangadex/image/route.ts), which:
+[`src/app/api/mangadex/image/route.ts`](aniscanic/src/app/api/mangadex/image/route.ts), which:
 
 - only fetches from `uploads.mangadex.org` and `*.mangadex.network` over HTTPS
 - refuses redirects (a 3xx could point outside the allowlist)
@@ -106,7 +108,7 @@ AniList images are loaded directly through `next/image` (allowed in `next.config
 ## Project structure
 
 ```
-src/
+aniscanic/src/
 ├── app/                         # App Router pages
 │   ├── page.tsx                 # Home: hero + latest French chapters
 │   ├── manga/                   # Library/search, series page, chapter reader
@@ -139,7 +141,7 @@ src/
 - **Interactivity** lives in small client components; everything else stays a server component.
 - The path alias `@/*` maps to `src/*`.
 
-See [`CLAUDE.md`](CLAUDE.md) for the full set of project guidelines.
+See [`CLAUDE.md`](aniscanic/CLAUDE.md) for the full set of project guidelines.
 
 ## Privacy
 
