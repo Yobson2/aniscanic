@@ -19,7 +19,7 @@ const unbounded = Unbounded({
 });
 
 export const metadata: Metadata = {
-  title: "Aniscanic — Mangas en français, films d’animation et quiz",
+  title: "Aniscanic - Mangas en français, films d’animation et quiz",
   description:
     "Lis des mangas traduits en français par les groupes de fans, découvre les films d’animation les plus vus et teste ta culture anime.",
   icons: {

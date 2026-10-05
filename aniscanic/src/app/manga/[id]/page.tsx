@@ -34,7 +34,7 @@ const dateFormat = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'sh
 export async function generateMetadata({ params }: { params: Params }) {
   const { id } = await params;
   const manga = await getManga(id).catch(() => null);
-  return { title: manga ? `${manga.title} — Aniscanic` : 'Manga introuvable — Aniscanic' };
+  return { title: manga ? `${manga.title} - Aniscanic` : 'Manga introuvable - Aniscanic' };
 }
 
 export default async function MangaDetailPage({ params }: { params: Params }) {
@@ -102,7 +102,7 @@ export default async function MangaDetailPage({ params }: { params: Params }) {
                       href={routes.chapter(manga.id, latest.id)}
                       className="inline-flex items-center justify-center rounded-xl bg-white/10 px-6 py-4 font-semibold hover:bg-white/20 transition-colors"
                     >
-                      Dernier chapitre ({latest.number ?? '—'})
+                      Dernier chapitre ({latest.number ?? '-'})
                     </Link>
                   )}
                 </div>

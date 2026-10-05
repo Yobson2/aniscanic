@@ -1,4 +1,4 @@
-// Open Trivia DB — free, no key, CORS enabled. Category 31 = "Entertainment: Japanese Anime & Manga".
+// Open Trivia DB - free, no key, CORS enabled. Category 31 = "Entertainment: Japanese Anime & Manga".
 // Questions are in English. Limit: 1 request every 5 seconds per IP.
 // https://opentdb.com/api_config.php
 

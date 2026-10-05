@@ -6,7 +6,7 @@ import PageHeader from '@/components/page-header';
 import { routes } from '@/constants';
 import { getRatings, PAGE_SIZE, searchManga, type Manga } from '@/lib/api/mangadex';
 
-export const metadata = { title: 'Bibliothèque Manga — Aniscanic' };
+export const metadata = { title: 'Bibliothèque Manga - Aniscanic' };
 
 async function loadCatalog(query: string, page: number) {
   try {

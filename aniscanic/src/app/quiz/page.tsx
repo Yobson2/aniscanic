@@ -2,7 +2,7 @@ import PageHeader from '@/components/page-header';
 import QuizGame from '@/components/quiz/quiz-game';
 import { getQuestionCounts } from '@/lib/api/opentdb';
 
-export const metadata = { title: 'Quiz anime — Aniscanic' };
+export const metadata = { title: 'Quiz anime - Aniscanic' };
 
 export default async function QuizPage() {
   const counts = await getQuestionCounts().catch(() => null);

@@ -1,4 +1,4 @@
-// AniList GraphQL API — free, no key. https://docs.anilist.co
+// AniList GraphQL API - free, no key. https://docs.anilist.co
 
 const API = 'https://graphql.anilist.co';
 

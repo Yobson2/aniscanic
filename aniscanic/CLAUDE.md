@@ -4,17 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 
 
-## Skills — When & How to Use
+## Skills - When & How to Use
 
-Both skills **must respect the "Design System Rules — Aniscanic" section below as hard constraints**. Never suggest or generate UI that violates those rules (e.g. no 1px borders, no default Tailwind shadows, no sharp corners, no `#000000`).
+Both skills **must respect the "Design System Rules - Aniscanic" section below as hard constraints**. Never suggest or generate UI that violates those rules (e.g. no 1px borders, no default Tailwind shadows, no sharp corners, no `#000000`).
 
 ### `frontend-design` (build)
 - **Invoke before** creating new components, new pages, or making significant visual changes (layout shifts, new interaction patterns, new sections).
 - **Do NOT invoke** for trivial edits: padding tweaks, copy changes, translation fixes, import reordering, bug fixes that don't alter visual output.
 
 ### `ui-ux-pro-max` (plan + review)
-- **Invoke to plan** before building any new feature or page — define UX flow, layout strategy, interaction states, responsive breakpoints, and accessibility requirements first.
-- **Invoke to review** after building — audit for accessibility (WCAG AA), responsive consistency, animation quality, color contrast, and Modern Griot conformance.
+- **Invoke to plan** before building any new feature or page - define UX flow, layout strategy, interaction states, responsive breakpoints, and accessibility requirements first.
+- **Invoke to review** after building - audit for accessibility (WCAG AA), responsive consistency, animation quality, color contrast, and Modern Griot conformance.
 - **Invoke to improve** existing pages when asked to polish, optimize, or fix UX issues.
 
 ### Ideal workflow for new features
@@ -72,17 +72,17 @@ Remote images from `images.unsplash.com` are allowed in `next.config.ts`.
 - Lucide React for icons
 - Framer Motion available for animations
 
-## Skills — When & How to Use
+## Skills - When & How to Use
 
-Both skills **must respect the "Design System Rules — Aniscanic" section below as hard constraints**. Never suggest or generate UI that violates those rules (e.g. no 1px borders, no default Tailwind shadows, no sharp corners, no `#000000`).
+Both skills **must respect the "Design System Rules - Aniscanic" section below as hard constraints**. Never suggest or generate UI that violates those rules (e.g. no 1px borders, no default Tailwind shadows, no sharp corners, no `#000000`).
 
 ### `frontend-design` (build)
 - **Invoke before** creating new components, new pages, or making significant visual changes (layout shifts, new interaction patterns, new sections).
 - **Do NOT invoke** for trivial edits: padding tweaks, copy changes, translation fixes, import reordering, bug fixes that don't alter visual output.
 
 ### `ui-ux-pro-max` (plan + review)
-- **Invoke to plan** before building any new feature or page — define UX flow, layout strategy, interaction states, responsive breakpoints, and accessibility requirements first.
-- **Invoke to review** after building — audit for accessibility (WCAG AA), responsive consistency, animation quality, color contrast, and Modern Griot conformance.
+- **Invoke to plan** before building any new feature or page - define UX flow, layout strategy, interaction states, responsive breakpoints, and accessibility requirements first.
+- **Invoke to review** after building - audit for accessibility (WCAG AA), responsive consistency, animation quality, color contrast, and Modern Griot conformance.
 - **Invoke to improve** existing pages when asked to polish, optimize, or fix UX issues.
 
 ### Ideal workflow for new features

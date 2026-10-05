@@ -5,7 +5,7 @@ import { routes } from '@/constants';
 import { cn } from '@/lib/utils';
 import { getTopRatedManga, type MangaRankingSort, type RankedManga } from '@/lib/api/anilist';
 
-export const metadata = { title: 'Classement manga — Aniscanic' };
+export const metadata = { title: 'Classement manga - Aniscanic' };
 
 const RANKING_SIZE = 20;
 

@@ -2,7 +2,7 @@ import PageHeader from '@/components/page-header';
 import MovieCard from '@/components/movie-card';
 import { getPopularMovies } from '@/lib/api/anilist';
 
-export const metadata = { title: 'Films d’animation — Aniscanic' };
+export const metadata = { title: 'Films d’animation - Aniscanic' };
 
 export default async function MoviesPage() {
   const movies = await getPopularMovies(12).catch(() => null);

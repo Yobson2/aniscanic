@@ -14,7 +14,7 @@ export const fr = {
     switchToDark: 'Passer en mode sombre',
   },
 
-  // Home — Hero Banner
+  // Home - Hero Banner
   hero: {
     title: "Plongez dans l'univers",
     titleHighlight: 'manga',
@@ -23,7 +23,7 @@ export const fr = {
     cta: 'Explorer maintenant',
   },
 
-  // Home — Trending Section
+  // Home - Trending Section
   trending: {
     title: 'Mangas Tendance',
     subtitle: 'Les séries qui font vibrer la communauté',
@@ -31,7 +31,7 @@ export const fr = {
     chapters: 'chapitres',
   },
 
-  // Home — Features Section
+  // Home - Features Section
   features: {
     title: 'Une expérience unique',
     subtitle:

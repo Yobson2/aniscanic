@@ -5,7 +5,7 @@ type LogoVariant = "full" | "stacked" | "icon" | "wordmark";
 type LogoSize = "sm" | "md" | "lg";
 /** "color" = red + gold mark, "mono" = single-colour mark */
 type LogoColorMode = "color" | "mono";
-/** The background the logo sits on — drives wordmark and mono colours */
+/** The background the logo sits on - drives wordmark and mono colours */
 type LogoSurface = "dark" | "light";
 
 const BRAND = {

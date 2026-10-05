@@ -1,4 +1,4 @@
-// MangaDex API — server-side only (import from server components / route handlers).
+// MangaDex API - server-side only (import from server components / route handlers).
 // Their rules (https://api.mangadex.org/docs/): no CORS for third-party sites, so every
 // call goes through our server; a real User-Agent is mandatory; images must be proxied
 // (see /api/mangadex/image); ~5 req/s per IP, 40 req/min on at-home/server.

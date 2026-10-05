@@ -31,8 +31,8 @@ async function loadReader(mangaId: string, chapterId: string) {
 export async function generateMetadata({ params }: { params: Params }) {
   const { id, chapterId } = await params;
   const [manga, chapter] = await Promise.all([getManga(id).catch(() => null), getChapter(chapterId).catch(() => null)]);
-  if (!manga || !chapter) return { title: 'Chapitre introuvable — Aniscanic' };
-  return { title: `${manga.title}, ${chapterLabel(chapter).toLowerCase()} — Aniscanic` };
+  if (!manga || !chapter) return { title: 'Chapitre introuvable - Aniscanic' };
+  return { title: `${manga.title}, ${chapterLabel(chapter).toLowerCase()} - Aniscanic` };
 }
 
 const navButton =

@@ -2,7 +2,7 @@
 
 # aniscanic
 
-**Read manga in French, discover anime films, and test your otaku knowledge — no account, no ads.**
+**Read manga in French, discover anime films, and test your otaku knowledge - no account, no ads.**
 
 Aniscanic is a French-language web app built on live public APIs: fan translations from MangaDex,
 films and rankings from AniList, and quiz questions from Open Trivia DB.
@@ -29,22 +29,22 @@ Every number on the site comes from an API or from the visitor's own device. Not
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/screenshots/manga.png" alt="Manga library"><br><sub><b>Library</b> — <code>/manga</code></sub></td>
-    <td width="50%"><img src="docs/screenshots/manga-detail.png" alt="Manga detail page"><br><sub><b>Series page</b> — <code>/manga/[id]</code></sub></td>
+    <td width="50%"><img src="docs/screenshots/manga.png" alt="Manga library"><br><sub><b>Library</b> - <code>/manga</code></sub></td>
+    <td width="50%"><img src="docs/screenshots/manga-detail.png" alt="Manga detail page"><br><sub><b>Series page</b> - <code>/manga/[id]</code></sub></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/reader.png" alt="Chapter reader"><br><sub><b>Reader</b> — <code>/manga/[id]/chapter/[chapterId]</code></sub></td>
-    <td><img src="docs/screenshots/movies.png" alt="Anime films"><br><sub><b>Films</b> — <code>/movie</code></sub></td>
+    <td><img src="docs/screenshots/reader.png" alt="Chapter reader"><br><sub><b>Reader</b> - <code>/manga/[id]/chapter/[chapterId]</code></sub></td>
+    <td><img src="docs/screenshots/movies.png" alt="Anime films"><br><sub><b>Films</b> - <code>/movie</code></sub></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/quiz.png" alt="Quiz level selection"><br><sub><b>Quiz</b> — <code>/quiz</code></sub></td>
-    <td><img src="docs/screenshots/ranking.png" alt="Manga ranking"><br><sub><b>Rankings</b> — <code>/ranking</code></sub></td>
+    <td><img src="docs/screenshots/quiz.png" alt="Quiz level selection"><br><sub><b>Quiz</b> - <code>/quiz</code></sub></td>
+    <td><img src="docs/screenshots/ranking.png" alt="Manga ranking"><br><sub><b>Rankings</b> - <code>/ranking</code></sub></td>
   </tr>
 </table>
 
 <p align="center">
   <img src="docs/screenshots/home-mobile.png" alt="Homepage on mobile" width="300"><br>
-  <sub><b>Mobile</b> — homepage at 390px</sub>
+  <sub><b>Mobile</b> - homepage at 390px</sub>
 </p>
 
 ## Tech stack
