@@ -2,7 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-      
+
+  // Hide the Next.js dev indicator ("N" badge) in development
+  devIndicators: false,
+
   images: {
     remotePatterns: [
         {
