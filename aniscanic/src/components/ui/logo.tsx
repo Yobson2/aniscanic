@@ -1,218 +1,76 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-type LogoVariant = "full" | "icon" | "wordmark";
+type LogoVariant = "full" | "stacked" | "icon" | "wordmark";
 type LogoSize = "sm" | "md" | "lg";
-type LogoColorMode = "gradient" | "white" | "dark";
+/** "color" = red + gold mark, "mono" = single-colour mark */
+type LogoColorMode = "color" | "mono";
+/** The background the logo sits on — drives wordmark and mono colours */
+type LogoSurface = "dark" | "light";
 
-interface LogoProps {
-  variant?: LogoVariant;
-  size?: LogoSize;
-  colorMode?: LogoColorMode;
-  className?: string;
-}
-
-const sizeMap = {
-  sm: { icon: 24, text: "text-lg", gap: "gap-1.5" },
-  md: { icon: 36, text: "text-2xl", gap: "gap-2" },
-  lg: { icon: 56, text: "text-4xl", gap: "gap-3" },
+const BRAND = {
+  red: "#FF4655",
+  gold: "#FFD369",
+  ink: "#1F1F1F",
+  cream: "#F5F5F5",
 } as const;
 
-// ─── Concept 1: Flame Eye ───────────────────────────────────────────────────
+const sizeMap = {
+  sm: { icon: 24, text: "text-lg", gap: "gap-1.5", stackGap: "gap-2" },
+  md: { icon: 36, text: "text-2xl", gap: "gap-2.5", stackGap: "gap-3" },
+  lg: { icon: 56, text: "text-4xl", gap: "gap-3.5", stackGap: "gap-4" },
+} as const;
 
-function FlameEyeIcon({
-  size,
-  colorMode,
+// ─── Panel A mark ───────────────────────────────────────────────────────────
+// An "A" drawn with manga panel gutters (negative space) on a rounded tile.
+// The gold counter panel is the spotlight; the crossbar rises to the right.
+// Below 24px a heavier "favicon cut" keeps the gutters legible.
+
+export function LogoMark({
+  size = 36,
+  colorMode = "color",
+  surface = "dark",
+  title,
+  className,
 }: {
-  size: number;
-  colorMode: LogoColorMode;
+  size?: number;
+  colorMode?: LogoColorMode;
+  surface?: LogoSurface;
+  /** Accessible name; omit when the mark sits next to a visible wordmark */
+  title?: string;
+  className?: string;
 }) {
-  const id = React.useId();
-  const gradId = `eye-grad-${id}`;
-  const monoFill =
-    colorMode === "white" ? "#F5F5F5" : colorMode === "dark" ? "#1F1F1F" : undefined;
-  const pupilFill = colorMode === "white" ? "#1F1F1F" : colorMode === "dark" ? "#F5F5F5" : "#1F1F1F";
-  const strokeColor = colorMode === "white" ? "#F5F5F5" : colorMode === "dark" ? "#1F1F1F" : "#F5F5F5";
+  const maskId = `panel-a-${React.useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const gutter = size < 24 ? 13 : 9;
+  const radius = size < 24 ? 22 : 24;
+
+  const monoFill = surface === "dark" ? BRAND.cream : BRAND.ink;
+  const tileFill = colorMode === "mono" ? monoFill : BRAND.red;
+  const spotlightFill = colorMode === "mono" ? monoFill : BRAND.gold;
 
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 40 40"
+      viewBox="0 0 100 100"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-    >
-      {!monoFill && (
-        <defs>
-          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FF4655" />
-            <stop offset="100%" stopColor="#FFD369" />
-          </linearGradient>
-        </defs>
-      )}
-      {/* Eye outline */}
-      <path
-        d="M4,20 Q20,6 36,20 Q20,34 4,20 Z"
-        fill="none"
-        stroke={strokeColor}
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
-      {/* Iris */}
-      <circle
-        cx="20"
-        cy="20"
-        r="8"
-        fill={monoFill ?? `url(#${gradId})`}
-      />
-      {/* Pupil */}
-      <circle cx="20" cy="20" r="3.5" fill={pupilFill} />
-      {/* Highlight */}
-      <circle cx="22.5" cy="17.5" r="1.5" fill="#FFFFFF" opacity="0.85" />
-      {/* Spark lines (only at larger sizes) */}
-      {size >= 32 && (
-        <>
-          <line
-            x1="30"
-            y1="10"
-            x2="34"
-            y2="6"
-            stroke={monoFill ?? "#FFD369"}
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <line
-            x1="33"
-            y1="14"
-            x2="37"
-            y2="12"
-            stroke={monoFill ?? "#FFD369"}
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </>
-      )}
-    </svg>
-  );
-}
-
-// ─── Concept 2: Shuriken A (Recommended) ────────────────────────────────────
-
-function ShurikenAIcon({
-  size,
-  colorMode,
-}: {
-  size: number;
-  colorMode: LogoColorMode;
-}) {
-  const id = React.useId();
-  const gradId = `shuriken-grad-${id}`;
-  const maskId = `shuriken-mask-${id}`;
-  const monoFill =
-    colorMode === "white" ? "#F5F5F5" : colorMode === "dark" ? "#1F1F1F" : undefined;
-
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 40 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+      className={cn("shrink-0", className)}
+      {...(title ? { role: "img", "aria-label": title } : { "aria-hidden": true })}
     >
       <defs>
-        {!monoFill && (
-          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FF4655" />
-            <stop offset="100%" stopColor="#FFD369" />
-          </linearGradient>
-        )}
-        <mask id={maskId}>
-          {/* White = visible, black = cut out */}
-          <rect width="40" height="40" fill="white" />
-          {/* "A" cutout: diamond shape */}
-          <path
-            d="M20,13 L25,21 L20,28 L15,21 Z"
-            fill="black"
-          />
-          {/* "A" crossbar */}
-          <rect x="16.5" y="22" width="7" height="2" rx="0.5" fill="white" />
+        <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+          <rect width="100" height="100" fill="white" />
+          <g stroke="black" strokeWidth={gutter} strokeLinecap="round">
+            <line x1="51.92" y1="-6" x2="16.08" y2="106" />
+            <line x1="48.08" y1="-6" x2="83.92" y2="106" />
+            <line x1="28.88" y1="66" x2="68.56" y2="58" />
+          </g>
         </mask>
       </defs>
-      <g transform="rotate(12, 20, 20)">
-        {/* Four-pointed star with concave edges */}
-        <path
-          d="M20,2 Q26,14 38,20 Q26,26 20,38 Q14,26 2,20 Q14,14 20,2 Z"
-          fill={monoFill ?? `url(#${gradId})`}
-          mask={`url(#${maskId})`}
-        />
-      </g>
-    </svg>
-  );
-}
-
-// ─── Concept 3: Rising Frame ────────────────────────────────────────────────
-
-function RisingFrameIcon({
-  size,
-  colorMode,
-}: {
-  size: number;
-  colorMode: LogoColorMode;
-}) {
-  const id = React.useId();
-  const gradId = `frame-grad-${id}`;
-  const monoFill =
-    colorMode === "white" ? "#F5F5F5" : colorMode === "dark" ? "#1F1F1F" : undefined;
-  const strokeColor = monoFill ?? "#FF4655";
-
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 40 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {!monoFill && (
-        <defs>
-          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FF4655" />
-            <stop offset="100%" stopColor="#FFD369" />
-          </linearGradient>
-        </defs>
-      )}
-      <g transform="rotate(-2, 20, 20)">
-        {/* Manga panel frame */}
-        <rect
-          x="6"
-          y="3"
-          width="28"
-          height="34"
-          rx="4"
-          ry="4"
-          fill="none"
-          stroke={strokeColor}
-          strokeWidth="2.5"
-        />
-        {/* Play triangle */}
-        <path
-          d="M16,13 L28,20 L16,27 Z"
-          fill={monoFill ?? `url(#${gradId})`}
-          strokeLinejoin="round"
-        />
-        {/* Diagonal speed line */}
-        {size >= 32 && (
-          <line
-            x1="10"
-            y1="7"
-            x2="30"
-            y2="33"
-            stroke={monoFill ?? "#FFD369"}
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            opacity="0.4"
-          />
-        )}
+      <g mask={`url(#${maskId})`}>
+        <rect width="100" height="100" rx={radius} fill={tileFill} />
+        <polygon points="50,0 28.88,66 68.56,58" fill={spotlightFill} />
       </g>
     </svg>
   );
@@ -220,127 +78,108 @@ function RisingFrameIcon({
 
 // ─── Wordmark ───────────────────────────────────────────────────────────────
 
-function Wordmark({
-  colorMode,
-  textClass,
-  concept,
-}: {
-  colorMode: LogoColorMode;
-  textClass: string;
-  concept?: "eye" | "shuriken" | "frame";
-}) {
-  if (colorMode === "white") {
-    return (
-      <span className={cn(textClass, "font-extrabold tracking-wider text-[#F5F5F5]")}>
-        ANISCANIC
-      </span>
-    );
-  }
-  if (colorMode === "dark") {
-    return (
-      <span className={cn(textClass, "font-extrabold tracking-wider text-[#1F1F1F]")}>
-        ANISCANIC
-      </span>
-    );
-  }
-
-  // Gradient wordmark
-  if (concept === "shuriken") {
-    return (
-      <span className={cn(textClass, "font-extrabold tracking-wider")}>
-        <span className="text-[#FF4655]">A</span>
-        <span className="bg-gradient-to-r from-[#FF4655] to-[#FFD369] bg-clip-text text-transparent">
-          NISCANIC
-        </span>
-      </span>
-    );
-  }
-
+function Wordmark({ surface, textClass }: { surface: LogoSurface; textClass: string }) {
   return (
     <span
       className={cn(
         textClass,
-        "font-extrabold tracking-wider bg-gradient-to-r from-[#FF4655] to-[#FFD369] bg-clip-text text-transparent"
+        "font-display font-bold lowercase leading-none tracking-[-0.03em]",
+        surface === "dark" ? "text-brand-light" : "text-brand-dark"
       )}
     >
-      ANISCANIC
+      aniscanic
     </span>
   );
 }
 
-// ─── Icon map per concept ───────────────────────────────────────────────────
-
-const iconComponents = {
-  eye: FlameEyeIcon,
-  shuriken: ShurikenAIcon,
-  frame: RisingFrameIcon,
-} as const;
-
-type LogoConcept = keyof typeof iconComponents;
-
 // ─── Main Logo Component ────────────────────────────────────────────────────
 
-interface AniscanicLogoProps extends LogoProps {
-  concept?: LogoConcept;
+interface AniscanicLogoProps {
+  variant?: LogoVariant;
+  size?: LogoSize;
+  colorMode?: LogoColorMode;
+  surface?: LogoSurface;
+  className?: string;
 }
 
 export function AniscanicLogo({
   variant = "full",
   size = "md",
-  colorMode = "gradient",
-  concept = "shuriken",
+  colorMode = "color",
+  surface = "dark",
   className,
 }: AniscanicLogoProps) {
-  const { icon: iconSize, text: textClass, gap } = sizeMap[size];
-  const IconComponent = iconComponents[concept];
+  const { icon: iconSize, text: textClass, gap, stackGap } = sizeMap[size];
+
+  if (variant === "icon") {
+    return (
+      <LogoMark
+        size={iconSize}
+        colorMode={colorMode}
+        surface={surface}
+        title="Aniscanic"
+        className={className}
+      />
+    );
+  }
+
+  const stacked = variant === "stacked";
 
   return (
-    <span className={cn("inline-flex items-center", gap, className)}>
+    <span
+      className={cn(
+        "inline-flex items-center",
+        stacked ? cn("flex-col", stackGap) : gap,
+        className
+      )}
+    >
       {variant !== "wordmark" && (
-        <IconComponent size={iconSize} colorMode={colorMode} />
+        <LogoMark
+          size={stacked ? iconSize * 2 : iconSize}
+          colorMode={colorMode}
+          surface={surface}
+        />
       )}
-      {variant !== "icon" && (
-        <Wordmark colorMode={colorMode} textClass={textClass} concept={concept} />
-      )}
+      <Wordmark surface={surface} textClass={textClass} />
     </span>
   );
 }
 
-// ─── Showcase: renders all 3 concepts side by side (for comparison) ─────────
+// ─── Showcase: brand reference for every lockup and colour mode ─────────────
 
 export function LogoShowcase() {
   return (
-    <div className="flex flex-col gap-12 p-8">
-      {(["eye", "shuriken", "frame"] as const).map((concept) => (
-        <div key={concept} className="flex flex-col gap-6">
-          <h3 className="text-white text-lg font-semibold capitalize">
-            Concept: {concept === "eye" ? "Flame Eye" : concept === "shuriken" ? "Shuriken A" : "Rising Frame"}
-          </h3>
-
-          {/* Full color on dark */}
-          <div className="flex items-center gap-8 bg-[#1F1F1F] p-6 rounded-2xl">
-            <AniscanicLogo concept={concept} variant="full" size="lg" colorMode="gradient" />
-            <AniscanicLogo concept={concept} variant="icon" size="lg" colorMode="gradient" />
-            <AniscanicLogo concept={concept} variant="icon" size="md" colorMode="gradient" />
-            <AniscanicLogo concept={concept} variant="icon" size="sm" colorMode="gradient" />
-          </div>
-
-          {/* Monochrome white on dark */}
-          <div className="flex items-center gap-8 bg-[#1F1F1F] p-6 rounded-2xl">
-            <AniscanicLogo concept={concept} variant="full" size="lg" colorMode="white" />
-          </div>
-
-          {/* Full color on light */}
-          <div className="flex items-center gap-8 bg-white p-6 rounded-2xl">
-            <AniscanicLogo concept={concept} variant="full" size="lg" colorMode="gradient" />
-          </div>
-
-          {/* Monochrome dark on light */}
-          <div className="flex items-center gap-8 bg-white p-6 rounded-2xl">
-            <AniscanicLogo concept={concept} variant="full" size="lg" colorMode="dark" />
-          </div>
+    <div className="flex flex-col gap-8">
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="flex items-center justify-center rounded-3xl bg-brand-dark p-10">
+          <AniscanicLogo variant="full" size="lg" surface="dark" />
         </div>
-      ))}
+        <div className="flex items-center justify-center rounded-3xl bg-brand-light p-10">
+          <AniscanicLogo variant="full" size="lg" surface="light" />
+        </div>
+        <div className="flex items-center justify-center rounded-3xl bg-brand-dark p-10">
+          <AniscanicLogo variant="full" size="lg" colorMode="mono" surface="dark" />
+        </div>
+        <div className="flex items-center justify-center rounded-3xl bg-brand-light p-10">
+          <AniscanicLogo variant="full" size="lg" colorMode="mono" surface="light" />
+        </div>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="flex items-center justify-center rounded-3xl bg-brand-dark p-10">
+          <AniscanicLogo variant="stacked" size="lg" surface="dark" />
+        </div>
+        <div className="flex items-center justify-center rounded-3xl bg-brand-red p-10">
+          <AniscanicLogo variant="full" size="md" colorMode="mono" surface="dark" />
+        </div>
+        <div className="flex items-end justify-center gap-6 rounded-3xl bg-brand-dark p-10">
+          <LogoMark size={96} title="Aniscanic" />
+          <LogoMark size={48} />
+          <LogoMark size={32} />
+          <LogoMark size={20} />
+          <LogoMark size={16} />
+        </div>
+      </div>
     </div>
   );
 }

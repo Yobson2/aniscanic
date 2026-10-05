@@ -46,7 +46,8 @@ const Header: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center h-20">
             <Link href={routes.home} className="inline-flex">
-              <AniscanicLogo variant="full" size="md" colorMode="gradient" concept="shuriken" />
+              {/* Mono until scrolled: the red tile would vanish on the red PageHeader gradient */}
+              <AniscanicLogo variant="full" size="md" surface="dark" colorMode={scrolled ? "color" : "mono"} />
             </Link>
 
             <div className="hidden md:flex items-center space-x-8">
